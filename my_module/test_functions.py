@@ -1,8 +1,4 @@
-"""Test for my functions.
-
-Note: because these are 'empty' functions (return None), here we just test
-  that the functions execute, and return None, as expected.
-"""
+"""Test for my functions."""
 from functions import encryptor_generator, extended_gcd
 from classes import Encryptor
 from random import randrange

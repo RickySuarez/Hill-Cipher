@@ -1,7 +1,6 @@
 """Classes used throughout project"""
 import numpy as np
 
-"""Objects of the Encryptor class have two numpy arrays as instance attributes in order to encrypt and decrypt"""
 class Encryptor:
     """
     Encryptor class for encrypting and decrypting strings using a Hill Cipher.

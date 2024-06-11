@@ -47,7 +47,7 @@ def test_decrypt():
     decrypted = encryptor.decrypt(str1 + str2 + str3 + str4 + str5 + str6)
     assert decrypted == 'Hello World'
 
-# Generate 256 random strings of lengths 0 - 256 and ensure
+# Generate 256 random strings of lengths 0 - 255 and ensure
 # the decryptions match the original strings.
 def test_random():
     for x in range(256):

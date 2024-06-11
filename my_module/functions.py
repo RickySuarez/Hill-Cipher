@@ -3,8 +3,15 @@ import numpy as np
 from random import randrange
 from my_module.classes import Encryptor
 
-"""Function that takes in no argument and returns an Encryptor object"""
+
 def encryptor_generator():
+    """
+    Generates an Encryptor object for encryption and decryption.
+
+    Returns:
+        Encryptor: An Encryptor object.
+    """
+    
     # Set the gcd to an initial value of 0 in order to set up the while loop
     # n is the maximum value of the allowed Unicode characters
     gcd = 0
@@ -43,8 +50,17 @@ def encryptor_generator():
     return Encryptor(matrix, inverse)
 
 
-"""Recursive implementation of the extended Euclidean Algorithm"""
 def extended_gcd(a, b):
+    """
+    Recursive implementation of the extended Euclidean algorithm.
+
+    Args:
+        a (int): First integer.
+        b (int): Second integer.
+
+    Returns:
+        Tuple(int, int, int): GCD of the two integers and Bezout coefficients.
+    """
     # if b is 0, then gcd(a,b) = a and the Bezout coeficcients are 1 and 0.
     if b == 0:
         return a, 1, 0

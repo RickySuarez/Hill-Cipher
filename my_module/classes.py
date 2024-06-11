@@ -3,11 +3,32 @@ import numpy as np
 
 """Objects of the Encryptor class have two numpy arrays as instance attributes in order to encrypt and decrypt"""
 class Encryptor:
+    """
+    Encryptor class for encrypting and decrypting strings using a Hill Cipher.
+
+    Attributes:
+        matrix (numpy.ndarray): The encryption matrix.
+        inverse (numpy.ndarray): The inverse matrix used for decryption.
+
+    Raises:
+        Exception: If the given matrices are not inverses mod 256.
+
+    Methods:
+        __init__(matrix, inverse): Initializes the Encryptor with encryption and decryption matrices.
+        encrypt(str_to_encrypt): Encrypts a string using the encryption matrix.
+        decrypt(str_to_decrypt): Decrypts a string using the decryption matrix.
+    """
     
-    # Constructor assigns a matrix and its inverse used to encrypt and decrypt
-    # This constructor ensures that the matrices are inverses mod 256.
-    # Otherwise, it raises an exception.
     def __init__(self, matrix, inverse):
+        """
+        Constructor assigns a matrix and its inverse used to encrypt and decrypt.
+        This constructor ensures that the matrices are inverses mod 256.
+        Otherwise, it raises an exception.
+
+        Args:
+            matrix (numpy.ndarray): The encryption matrix.
+            inverse (numpy.ndarray): The inverse matrix used for decryption.
+        """
         
         # Multiply the matrices.
         product = np.matmul(matrix, inverse) % 256
@@ -24,9 +45,17 @@ class Encryptor:
         else:
             raise Exception('The given matrices are not inverses mod 256.')
         
-    # encrypt method used to encrypt strings by breaking the string up into column matrices
-    # and multiplying by the matrix instance attribute on the left.
+   
     def encrypt(self, str_to_encrypt):
+        """
+        Encrypts a string using the encryption matrix.
+
+        Args:
+            str_to_encrypt (str_to_encrypt): The string to be encrypted.
+
+        Returns:
+            str: The encrypted string.
+        """
         
         # Stores the result.
         result = ''
@@ -67,9 +96,16 @@ class Encryptor:
         # many characters where appended at the beginning of the function.
         return chr(count) + result
     
-    # Works similarily to encrypt with the exception that we multiply by the inverse matrix
-    # and use the prepended count value to determine how many characters we have to remove in the end.
     def decrypt(self, str_to_decrypt):
+        """
+        Decrypts a string using the decryption matrix.
+
+        Args:
+            str_to_decrypt (str_to_decrypt): The string to be decrypted.
+
+        Returns:
+            str: The decrypted string.
+        """
         
         # Used to store the result.
         result = ''

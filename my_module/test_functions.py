@@ -1,6 +1,6 @@
 """Test for my functions."""
-from functions import encryptor_generator, extended_gcd
-from classes import Encryptor
+from my_module.generator import encryptor_generator, extended_gcd
+from my_module.Encryptor import Encryptor
 from random import randrange
 import numpy as np
 

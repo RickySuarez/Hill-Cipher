@@ -1,7 +1,7 @@
 """A collection of functions for doing my project."""
 import numpy as np
 from random import randrange
-from my_module.classes import Encryptor
+from my_module.Encryptor import Encryptor
 
 
 def encryptor_generator():

@@ -1,5 +1,7 @@
 """Classes used throughout project"""
 import numpy as np
+from my_module.matrix_operations import determinant, adjoint
+from random import randrange
 
 class Encryptor:
     """
@@ -18,31 +20,8 @@ class Encryptor:
         decrypt(str_to_decrypt): Decrypts a string using the decryption matrix.
     """
     
-    def __init__(self, matrix, inverse):
-        """
-        Constructor assigns a matrix and its inverse used to encrypt and decrypt.
-        This constructor ensures that the matrices are inverses mod 256.
-        Otherwise, it raises an exception.
-
-        Args:
-            matrix (numpy.ndarray): The encryption matrix.
-            inverse (numpy.ndarray): The inverse matrix used for decryption.
-        """
-        
-        # Multiply the matrices.
-        product = np.matmul(matrix, inverse) % 256
-        
-        # If the product is equal to an identity matrix,
-        # Assign instance attributes.
-        identity = np.identity(matrix.shape[0])
-        if np.array_equal(product, identity):
-            self.matrix = np.array(matrix)
-            self.inverse = np.array(inverse)
-        
-        # If the product is not equal to an identity matrix,
-        # raise an exception.
-        else:
-            raise Exception('The given matrices are not inverses mod 256.')
+    def __init__(self, size):
+        self.matrix, self.inverse = Encryptor.matrix_generator(size)
         
    
     def encrypt(self, str_to_encrypt):
@@ -136,3 +115,97 @@ class Encryptor:
         
         # Return the string obtained when removing the padded characters.
         return result[:len(result) - count]
+    
+    # Pass matrices to printMatrix to neatly display values.
+    def showMatrix(self):
+        Encryptor.printMatrix(self.matrix)
+
+    def showInverse(self):
+        Encryptor.printMatrix(self.inverse)
+
+    # Static method used to neatly display matrices.
+    def printMatrix(matrix):
+        size = matrix.shape[0]
+        print(u'\u250C\u2500' + ' ' * (size*4 - 1) + u'\u2500\u2510')
+        for x in range(size):
+            row = u'\u2502'
+            for y in range(size):
+                row = row + ' {:3}'.format(str(matrix[x][y]))
+            row = row + ' ' + u'\u2502'
+            print(row)
+        print(u'\u2514\u2500' + ' ' * (size*4 - 1) + u'\u2500\u2518')
+    
+    def matrix_generator(size):
+        """
+        Generates an Encryptor object for encryption and decryption.
+
+        Returns:
+            Encryptor: An Encryptor object.
+        """
+        
+        # Set the gcd to an initial value of 0 in order to set up the while loop
+        # n is the maximum value of the allowed Unicode characters
+        gcd = 0
+        n = 256
+        
+        # While loop that aids in the creation of the encryption matrix.
+        # A matrix A is only invertible mod 256 if gcd(det(A), 256) = 1.
+        # Therefore it is necessary to create another random matrix if the gcd is anything but 1.
+        while gcd != 1:
+            
+            # Populating a numpy array with random values up to 256.
+            ls = []
+            for x in range(size):
+                tmp = []
+                for y in range(size):
+                    tmp.append(randrange(n))
+                ls.append(tmp)
+            matrix = np.array(ls)
+            
+            # Calculation of the determinant of the matrix.
+            det = determinant(matrix)
+            
+            # If the determinant is negative, readjust by adding n until it reaches a positive congruent value mod n.
+            while det < 0:
+                det += n
+            
+            # Ensure that the det value is congruent to the det(matrix) and also between 0 and n.
+            det %= n
+            
+            # Calculate the gcd and Bezout coefficients used in the creation of the inverse matrix.
+            gcd, x, y = Encryptor.extended_gcd(n, det)
+        
+        # Calculating the inverse of the matrix through use of the matrix inversion formula.
+        inverse = adjoint(matrix)
+        
+        # Ensure that the matrix only has a positive value when applying the mod operator.
+        # This is necessary since Python allows for negative remainders which is not helpful
+        # when applying the Hill Cipher.
+        inverse = ((y * inverse) % n + n) % n
+        
+        # Return an Encryptor object which is found in classes.py.
+        return matrix, inverse
+
+
+    def extended_gcd(a, b):
+        """
+        Recursive implementation of the extended Euclidean algorithm.
+
+        Args:
+            a (int): First integer.
+            b (int): Second integer.
+
+        Returns:
+            Tuple(int, int, int): GCD of the two integers and Bezout coefficients.
+        """
+        # if b is 0, then gcd(a,b) = a and the Bezout coeficcients are 1 and 0.
+        if b == 0:
+            return a, 1, 0
+        else:
+            # If b is not 0, then recurse on b and a % b as defined by the Euclidean Algorithm.
+            gcd, x1, y1 = Encryptor.extended_gcd(b, a % b)
+            
+            # Calculate the Bezout coeficcients as defined by the Extended Euclidean Algorithm.
+            x = y1
+            y = x1 - (a // b) * y1
+            return gcd, x, y

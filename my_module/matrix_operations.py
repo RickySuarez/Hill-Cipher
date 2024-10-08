@@ -4,6 +4,9 @@ def cofactor(matrix, i, j):
     if matrix.shape[0] != matrix.shape[1]:
         raise Exception("Matrix is not square.")
     
+    if matrix.shape[0] == 1:
+        return 1
+    
     sub = submatrix(matrix,i,j)
     return ((-1) ** (i+j)) * determinant(sub)
     
@@ -11,8 +14,9 @@ def determinant(matrix):
     if matrix.shape[0] != matrix.shape[1]:
         raise Exception("Matrix is not square.")
     size = matrix.shape[0]
-    if size == 2:
-        return (matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]) % 256
+
+    if size == 1:
+        return matrix[0][0]
         
     det = 0
     for x in range(size):
@@ -49,9 +53,6 @@ def adjoint(matrix):
         raise Exception("Matrix is not square.")
     
     size = matrix.shape[0]
-
-    if size == 2:
-        return np.array([[matrix[1][1], -matrix[0][1]], [-matrix[1][0], matrix[0][0]]])
 
     ls = []
     for x in range(size):

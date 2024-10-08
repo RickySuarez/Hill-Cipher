@@ -21,6 +21,8 @@ class Encryptor:
     """
     
     def __init__(self, size):
+        if size < 1:
+            raise Exception('Invalid matrix size. The size must be positive.')
         self.matrix, self.inverse = Encryptor.matrix_generator(size)
         
    
